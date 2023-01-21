@@ -3,20 +3,20 @@
 #include <qqml.h>
 #include <restaurant.hpp>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 #if QT_VERSION >= 0x50601
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
-    QGuiApplication app(argc, argv);
-    Restaurant rest;
+  QGuiApplication app(argc, argv);
+  Restaurant rest;
+  QQmlApplicationEngine engine;
 
-    QQmlApplicationEngine engine;
-    qmlRegisterType<Restaurant>("qt.restaurant", 1, 0, "Restaurant");
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+  qmlRegisterType<Restaurant>("qt.restaurant", 1, 0, "Restaurant");
+  engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
-    return app.exec();
+  if (engine.rootObjects().isEmpty())
+    return -1;
+
+  return app.exec();
 }

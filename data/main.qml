@@ -16,7 +16,6 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         Text {
-            anchors.bottom: parent.bottom - 80
             id: label
             font.pointSize: 12
             text: "Avaliable Hours: "
@@ -26,7 +25,6 @@ Window {
             id: input
             font.pointSize: 12
             text: "00:00"
-            // inputMask: "00:00;_"
             validator: RegExpValidator { 
                 regExp: /^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d))$/
             }
@@ -39,7 +37,6 @@ Window {
             availableHours: input.text
         }
         Text {
-            anchors.top: parent.top - 10
             text: cpp.availableHours
             font.pointSize: 12
             anchors.centerIn: parent

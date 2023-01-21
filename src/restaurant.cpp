@@ -1,40 +1,37 @@
-#include <qdebug.h>
-#include <qnamespace.h>
-#include <restaurant.hpp>
-#include <QStringList>
-#include <qtcsv/stringdata.h>
-#include <qtcsv/reader.h>
 #include <QDebug>
+#include <QStringList>
 #include <QTime>
+#include <qtcsv/reader.h>
+#include <qtcsv/stringdata.h>
+#include <restaurant.hpp>
 
-Restaurant::Restaurant(QObject* parent): QObject(parent) {}
+Restaurant::Restaurant(QObject *parent) : QObject(parent) {}
 
-QString Restaurant::availableHours() const{
-    return m_availableHours;
-}
+QString Restaurant::availableHours() const { return m_availableHours; }
 
-void Restaurant::setavailableHours(const QString& availableHours) {
-    auto time = QTime::fromString(availableHours);
-    qDebug() << time.toString();
-    QString file = ":/restaurant-hours.csv";
-    QList<QStringList> strList = QtCSV::Reader::readToList(file);
-    if(!establishment.isEmpty()) establishment.clear();
+void Restaurant::setavailableHours(const QString &availableHours) {
+  auto time = QTime::fromString(availableHours);
+  qDebug() << time.toString();
 
-    for (auto&& str : strList) {
-        if (!time.isValid()){
-            m_availableHours = "";
-            continue;
-        };
-        auto employeer = str.join(",");
-        if (employeer.contains(availableHours))
-            establishment << str.at(0);
-    }
-    m_availableHours = !establishment.isEmpty() ? establishment.join("\n") : "No vacancies!";
-    // qDebug() << this->availableHours();
-    emit availableHoursChanged();
-}
+  QString file = QStringLiteral(":/restaurant-hours.csv");
+  QList<QStringList> strList = QtCSV::Reader::readToList(file);
 
-void Restaurant::print() {
-    if (establishment.isEmpty()) qDebug() << "No vacancies!";
-    for (auto&& values : establishment) qDebug() << values;
+  // No accumulate content (reload)
+  if (!establishment.isEmpty())
+    establishment.clear();
+
+  for (auto &&str : strList) {
+
+    // check time format
+    if (!time.isValid())
+      continue; // skip
+
+    // List all content and search available hour
+    auto employeer = str.join(",");
+    if (employeer.contains(availableHours))
+      establishment << str.at(0); // only restaurant name
+  }
+  m_availableHours =
+      !establishment.isEmpty() ? establishment.join("\n") : "No vacancies!";
+  emit availableHoursChanged();
 }
