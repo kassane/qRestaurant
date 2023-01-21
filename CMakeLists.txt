@@ -13,14 +13,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Set additional project information
 set(COPYRIGHT "GPLv3")
-set(IDENTIFIER "Qt Restaurant")
+set(IDENTIFIER "Qt Restaurant-Demo")
+option(TESTING "Enable Test" OFF)
 
-option(TESTING "Enable Test" ON)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set(TESTING "Enable Test" ON)
+endif()
 
 #============== Dependences ======================#
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick Test)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick Test)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Quick Test)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Quick Test)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -50,12 +53,12 @@ else()
 endif()
 
 # --------------------------------------------------#
-if(TESTING)
-  enable_testing(true)
-  add_test(${PROJECT_NAME} ${PROJECT_NAME})
-  add_executable( ${PROJECT_NAME} ${MOC_Files} ${TEST_SRC} ${Restaurant_INCLUDE_DIR} ${qml_QRC} ${Restaurant_INCLUDE_DIR})
-  target_link_libraries( ${PROJECT_NAME} PUBLIC qtcsv Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Test)
+if(NOT TESTING)
+  add_executable( ${PROJECT_NAME} ${MOC_Files} ${SRC} ${Restaurant_INCLUDE_DIR} ${qml_QRC} ${Restaurant_INCLUDE_DIR})
+  target_link_libraries( ${PROJECT_NAME} PUBLIC qtcsv PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Quick)
 else()
-add_executable( ${PROJECT_NAME} ${MOC_Files} ${SRC} ${Restaurant_INCLUDE_DIR} ${qml_QRC} ${Restaurant_INCLUDE_DIR})
-  target_link_libraries( ${PROJECT_NAME} PUBLIC qtcsv Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+  enable_testing(true)
+  add_executable( ${PROJECT_NAME} ${MOC_Files} ${TEST_SRC} ${Restaurant_INCLUDE_DIR} ${qml_QRC} ${Restaurant_INCLUDE_DIR})
+  target_link_libraries( ${PROJECT_NAME} PUBLIC qtcsv PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Test)
+  add_test(${PROJECT_NAME} ${PROJECT_NAME})
 endif()

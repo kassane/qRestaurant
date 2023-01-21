@@ -1,10 +1,10 @@
+#include <QDebug>
 #include <QObject>
 #include <QTest>
 #include <QTime>
 #include <qtcsv/reader.h>
 #include <qtcsv/stringdata.h>
 #include <restaurant.hpp>
-#include <QDebug>
 
 class Tst : public QObject {
   Q_OBJECT
@@ -40,13 +40,12 @@ void Tst::initTestCase() {
 
   // remove "" (latest) element
   times.removeLast();
-  
+
   for (auto &&t : times) {
     time.fromString(t);
     qDebug() << "Debug: " << time.toString();
     QVERIFY2(time.isValid(), "Valid time format.");
   }
-
 }
 
 QTEST_MAIN(Tst)

@@ -11,7 +11,6 @@ QString Restaurant::availableHours() const { return m_availableHours; }
 
 void Restaurant::setavailableHours(const QString &availableHours) {
   auto time = QTime::fromString(availableHours);
-  qDebug() << time.toString();
 
   QString file = QStringLiteral(":/restaurant-hours.csv");
   QList<QStringList> strList = QtCSV::Reader::readToList(file);
@@ -21,7 +20,7 @@ void Restaurant::setavailableHours(const QString &availableHours) {
     establishment.clear();
 
   for (auto &&str : strList) {
-    
+
     // check time format
     if (!time.isValid())
       continue; // skip
@@ -30,8 +29,6 @@ void Restaurant::setavailableHours(const QString &availableHours) {
     auto employeer = str.join(",");
     if (employeer.contains(availableHours))
       establishment << str.at(0); // only restaurant name
-
-    establishment.removeLast();
   }
   m_availableHours =
       !establishment.isEmpty() ? establishment.join("\n") : "No vacancies!";

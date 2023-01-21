@@ -1,0 +1,33 @@
+name: Linux
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          fetch-depth: 0
+      
+      - name: Install buildtools
+        run: |
+            sudo apt update
+            sudo apt install -f build-essential libdouble-conversion-dev \
+            libgl1-mesa-dev libxkbcommon-x11-0 libpulse-dev libxext-dev \
+            libdrm-dev libx11-dev libudev-dev libinput-dev libts-dev libxcb-xinerama0-dev \
+            libxcb-xinerama0 libxkbcommon-dev libxkbcommon-x11-dev libx11-dev libxcb1-dev \
+            libx11-xcb-dev libxext-dev ninja-build cmake -y
+      
+      - name: Install Qt5
+        uses: jurplel/install-qt-action@v2
+        with:
+          version: 5.15.2
+          modules: qtcharts
+          dir: '${{ github.workspace }}/build/'
+
+      - name: Build & Tests
+        run: |
+              QTDIR="$GITHUB_WORKSPACE/build/Qt/5.15.2/gcc_64" && PATH="${QTDIR}/bin:$PATH" && LDFLAGS=-L${QTDIR}/lib && CPPFLAGS=-I${QTDIR}/include;
+              cmake -S. -B build -DCMAKE_BUILD_TYPE=Debug;cmake --build build --parallel; ctest
