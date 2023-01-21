@@ -22,8 +22,8 @@ endif()
 
 #============== Dependences ======================#
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Gui Quick Test)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Quick Test)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Quick Test)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Quick Test)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -55,7 +55,7 @@ endif()
 # --------------------------------------------------#
 if(NOT TESTING)
   add_executable( ${PROJECT_NAME} ${MOC_Files} ${SRC} ${Restaurant_INCLUDE_DIR} ${qml_QRC} ${Restaurant_INCLUDE_DIR})
-  target_link_libraries( ${PROJECT_NAME} PUBLIC qtcsv PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Quick)
+  target_link_libraries( ${PROJECT_NAME} PUBLIC qtcsv PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
 else()
   enable_testing(true)
   add_executable( ${PROJECT_NAME} ${MOC_Files} ${TEST_SRC} ${Restaurant_INCLUDE_DIR} ${qml_QRC} ${Restaurant_INCLUDE_DIR})
