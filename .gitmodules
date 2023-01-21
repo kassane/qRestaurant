@@ -1,4 +1,0 @@
-[submodule "vendor/qtcsv"]
-	path = vendor/qtcsv
-	url = https://github.com/iamantony/qtcsv
-	branch = qt4_qt5
